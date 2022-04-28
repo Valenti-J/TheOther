@@ -45,7 +45,7 @@ class Death:
         script.append("You see a person smiling at you, they are wearing a %s." % (random.choice(clothes)))
         script.append("\"What are you doing?\" The person asks.")
         script.append("You turn your eyes and see a mirror.")
-        script.append("Funnily enough, you look like the zombie you killed earlier that day.")
+        script.append("Funnily enough, you look like the zombie you killed earlier this week.")
         script.append("But...")
         script.append("Humanly?")
         x = random.randint(1,100)

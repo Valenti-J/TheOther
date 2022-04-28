@@ -285,7 +285,7 @@ class Game:
                 print("Do you...")
                 s = input("[1] Ignore them, [2] Hit them")
                 if s == "2":
-                    cr = CrewMember(random.choie(self.first_names),random.randint(5,70),
+                    cr = CrewMember(random.choice(self.first_names),random.randint(5,70),
                                     False,random.choice(descriptions))
                     self.dead_infected.append(Death(cr,True,"by running them over."))
                     y = random.randint(1,100)
@@ -299,11 +299,11 @@ class Game:
                 print("Do you...")
                 s = input("[1] Ignore them, [2] Stop and talk to them")
                 if s == "2":
-                    cr = CrewMember(random.choie(self.first_names), random.randint(30, 70),
+                    cr = CrewMember(random.choice(self.first_names), random.randint(30, 70),
                                     False)
                     print("\"Oh, thank goodness!  I have been walking for miles in search of other people.\" They say.")
                     time.sleep(1)
-                    print("\"Would you mind if I joined you guys\"")
+                    print("\"Can I join you guys\"")
                     s2 = input("[1] Yes, [2] No")
                     if s2 == "1":
                         print("They join you in your vehicle.")
@@ -327,12 +327,12 @@ class Game:
                     if len(self.weapons) > 0:
                         w = random.choice(self.weapons)
                         print("You kill it using a %s" % w)
-                        cr = CrewMember(random.choie(self.first_names), random.randint(5, 70),
+                        cr = CrewMember(random.choice(self.first_names), random.randint(5, 70),
                                     False, random.choice(descriptions))
                         self.dead_infected.append(Death(cr, True, "with a %s." % (w) ))
                     else:
                         print("You kill it by knocking it down and stomping its head in.")
-                        cr = CrewMember(random.choie(self.first_names), random.randint(5, 70),
+                        cr = CrewMember(random.choice(self.first_names), random.randint(5, 70),
                                         False, random.choice(descriptions))
                         self.dead_infected.append(Death(cr, True, "by knocking it over and stomping its head in."))
                 else:
@@ -341,12 +341,12 @@ class Game:
                     print("Do you...")
                     s = input("[1] Ignore them, [2] Approach them")
                     if s == "2":
-                        cr = CrewMember(random.choie(self.first_names), random.randint(30, 70),
+                        cr = CrewMember(random.choice(self.first_names), random.randint(30, 70),
                                         False)
                         print(
-                            "\"Oh, thank goodness!  I have been walking for miles in search of other people.\" They say.")
+                            "\"Oh, thank goodness! I have been walking for miles in search of other people.\" They say.")
                         time.sleep(1)
-                        print("\"Would you mind if I joined you guys\"")
+                        print("\"Can I join you guys\"")
                         s2 = input("[1] Yes, [2] No")
                         if s2 == "1":
                             print("They join you as you continue to walk.")
@@ -371,6 +371,101 @@ class Game:
             print("You are unable to find your way around the roadblock and lose the car.")
             self.car = False
 
+    def find_car(self):
+        print("While walking you find a car.")
+        time.sleep(1)
+        x = random.randint(1, 100)
+        if x < 25:
+            print("You are able to start it. ")
+            time.sleep(1)
+            print("You begin to drive off with it. ")
+            self.car = True
+        else:
+            print("You are unable to get it to work.")
+
+    def crew_zombie_attack(self):
+        if self.crew > 0:
+            bit = False
+            attacked = random.choice(self.crew_members)
+
+            name = random.choice(self.first_names)
+            descriptions = ["that surprisingly looking healthy", "wearing a name tag labeled: %s" % name,
+                            "with a spike though its eye", "missing an arm", "that wreaked of rotten flesh."]
+            age = random.randint(5, 70)
+            desc = "a "
+            if age < 18:
+                desc += "little "
+            desc += "zombie " + random.choice(descriptions)
+            zombie = CrewMember(name, age, False, desc)
+
+            print("While walking, %s is attacked by %s." % (attacked.get_name(), desc))
+            time.sleep(1)
+            print("What do you do? ")
+
+            if len(self.weapons) == 0:
+                s2 = input("[1] Ignore them, [2] Try to help them without a weapon ")
+            else:
+                s2 = input("[1] Ignore them, [2] Try to help them without a weapon,"
+                           " [3] Try to help them with a weapon ")
+
+            if s2 == "1":
+                x = random.randint(1,50)
+                if x < 45:
+                    print("You watch in horror as %s gets bit." % (attacked.get_name()))
+                    bit = True
+                else:
+                    print("%s is able to break free from the zombie and kills them." % (attacked.get_name()))
+            elif s2 == "3":
+                w = random.choice(self.weapons)
+                print("You use your %s to break %s free from the zombie, "
+                              "and then use it to kill them." % (attacked.get_name(),random.choice(self.weapons)))
+                dead = Death(zombie, True, "by using your %s to save %s" % (w, attacked.get_name()))
+                self.dead_infected.append(dead)
+            else:
+                x = random.randint(1, 50)
+                if x < 15:
+                    print("You manage to shove the zombie to the ground.")
+                    print("You stomp its head in.")
+                    dead = Death(zombie, True, "by stomping their head in to save %s" % attacked.get_name())
+                    self.dead_infected.append(dead)
+                else:
+                    print("You watch in horror as %s gets bit despite trying to help." % (attacked.get_name()))
+                    bit = True
+
+            if bit:
+
+                print("%s panics realizing they are bit" % (attacked.get_name()))
+                time.sleep(1)
+                print("\"I am going to turn!\" %s cries." % (attacked.get_name()))
+                time.sleep(1)
+                print("What do you do?")
+                s = input("[1] Leave them behind, [2] Kill them before they turn")
+                if s == "1":
+                    print("You walk away leaving %s to turn into a zombie." % (attacked.get_name()))
+                    attacked.set_infect("Just how you remembered.")
+                    death = Death(attacked,True,"by leaving them for dead after letting them get bit.")
+                    self.dead_infected.append(death)
+                else:
+                    if len(self.weapons) > 0:
+                        w = random.choice(self.weapons)
+                        print("You use your %s to kill %s before they turn into a zombie." % (w,attacked.get_name()))
+                        attacked.set_infect("Just how you remembered.")
+                        death = Death(attacked, True, "with using your %s before they turned into a zombie." % (w))
+                        self.dead_infected.append(death)
+
+                    else:
+                        print("You use your bare hands to kill %s before they turn into a zombie."
+                              % (attacked.get_name()))
+                        attacked.set_infect("Just how you remembered.")
+                        death = Death(attacked, True, "with using your bare hands before they "
+                                                      "turned into a zombie.")
+                        self.dead_infected.append(death)
+
+            else:
+                print("%s is grateful to be alive." % (attacked.get_name()))
+
+        else:
+            self.surprise_zombie()
 
 
 
@@ -393,9 +488,11 @@ class Game:
 
     def run(self):
         day = 1
-        non_car_events = [self.find_weapon,self.surprise_zombie,self.pit_stop,self.find_a_survivor]
+        non_car_events = [self.find_weapon,self.surprise_zombie,
+                          self.pit_stop,self.find_a_survivor,self.find_car,
+                          self.crew_zombie_attack]
         car_events = [self.run_out_gas,self.pit_stop,self.find_a_survivor,self.roadblock]
-        se = [self.find_weapon,self.surprise_zombie]
+        se = [self.find_weapon,self.surprise_zombie,self.crew_zombie_attack]
 
         dream = [self.feel_zombie_guilt,self.feel_zombie_memory1]
 
@@ -424,9 +521,15 @@ class Game:
             time.sleep(1)
             print("You begin to fall asleep.")
             if len(self.dead_infected) > 0:
-                self.feel_zombie_memory1()
+                if day < 9:
+                    top = 100 - 10*(day)
+                else:
+                    top = 2
+                x = random.randint(1, top)
+                if x < 10:
+                    random.choice(dream)()
             print("\n\n")
             time.sleep(1)
             day += 1
-            if day > 10:
+            if day > 15:
                 break

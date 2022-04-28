@@ -1,10 +1,10 @@
 class CrewMember:
 
-    def __init__(self,name,age,family,infected=False):
+    def __init__(self,name,age,family,infect=False):
         self.name = name
         self.age = age
         self.family = family
-        self.infect = infected
+        self.infect = infect
 
     def get_name(self):
         return self.name
@@ -15,7 +15,10 @@ class CrewMember:
     def get_family(self):
         return self.family
 
-    def get_infected(self):
-        return self.infected
+    def get_infect(self):
+        return self.infect
+
+    def set_infect(self, desc):
+        self.infect = desc
 
 
