@@ -234,9 +234,25 @@ class Game:
         print("You begin to stroll around the %s." % (location))
         time.sleep(1)
 
-        x = random.randint(1, 100)
-        if x < 25:
-            random.choice(self.sub_events)()
+        for i in range(5):
+            x = random.randint(1, 100)
+            if x < 25:
+                random.choice(self.sub_events)()
+            elif x < 50:
+                print("You are able to find some %s." % (goal))
+            else:
+                print("Searching...")
+            time.sleep(1)
+
+        if self.car:
+            print("After searching for a while, %s give up and start driving again." % (crew))
+        else:
+            print("After searching for a while, %s give up and start walking again." % (crew))
+
+
+
+
+
 
 
 
@@ -263,7 +279,7 @@ class Game:
         se = [self.find_weapon,self.surprise_zombie]
 
         for item in se:
-            self.sub_events.append(se)
+            self.sub_events.append(item)
 
         while True:
             print("Day %s" % (day))
